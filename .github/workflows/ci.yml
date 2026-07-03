@@ -40,7 +40,7 @@ jobs:
           cache: maven
 
       - name: Build and test
-        run: ./mvnw -B -ntp verify
+        run: mvn -B -ntp verify
 
   frontend:
     name: Frontend (typecheck + build)
