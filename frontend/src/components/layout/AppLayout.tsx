@@ -1,0 +1,28 @@
+import { Outlet, Navigate } from 'react-router-dom'
+import { useAuth } from '@/contexts/AuthContext'
+import { Sidebar } from './Sidebar'
+
+export function AppLayout() {
+  const { isAuthenticated, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <span className="text-muted-foreground text-sm">Carregando...</span>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+
+  return (
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto bg-background p-6">
+        <Outlet />
+      </main>
+    </div>
+  )
+}

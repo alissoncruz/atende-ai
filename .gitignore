@@ -1,0 +1,33 @@
+# Secrets
+.env
+.env.local
+
+# Maven
+target/
+.mvn/maven/
+
+# Gradle
+.gradle/
+.gradle-dist/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Claude Code local settings (personal, not shared)
+.claude/settings.local.json
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
