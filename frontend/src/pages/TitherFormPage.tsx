@@ -81,7 +81,7 @@ export function TitherFormPage() {
       } else {
         await titherService.create(payload)
       }
-      navigate('/tithers')
+      navigate('/dizimo/tithers')
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Não foi possível salvar o dizimista.')
     } finally {
@@ -189,7 +189,7 @@ export function TitherFormPage() {
             {error && <p className="text-sm text-destructive">{error}</p>}
 
             <div className="flex justify-end gap-3">
-              <Button type="button" variant="outline" onClick={() => navigate('/tithers')}>
+              <Button type="button" variant="outline" onClick={() => navigate('/dizimo/tithers')}>
                 Cancelar
               </Button>
               <Button type="submit" disabled={saving}>

@@ -14,7 +14,7 @@ export function LoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  if (isAuthenticated) return <Navigate to="/dashboard" replace />
+  if (isAuthenticated) return <Navigate to="/atendimento/dashboard" replace />
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -22,7 +22,7 @@ export function LoginPage() {
     setLoading(true)
     try {
       await login({ email, password })
-      navigate('/dashboard')
+      navigate('/atendimento/dashboard')
     } catch {
       setError('Email ou senha inválidos.')
     } finally {

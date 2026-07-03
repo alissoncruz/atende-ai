@@ -21,19 +21,19 @@ export default function App() {
 
           {/* Privado — todas as rotas dentro do AppLayout */}
           <Route element={<AppLayout />}>
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/customers" element={<CustomersPage />} />
-            <Route path="/appointments" element={<AppointmentsPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/knowledge" element={<KnowledgePage />} />
-            <Route path="/tithers" element={<TithersPage />} />
-            <Route path="/tithers/new" element={<TitherFormPage />} />
-            <Route path="/tithers/:id/edit" element={<TitherFormPage />} />
-            <Route path="/tithe-payments" element={<TithePaymentsPage />} />
+            <Route path="/atendimento/dashboard" element={<DashboardPage />} />
+            <Route path="/atendimento/customers" element={<CustomersPage />} />
+            <Route path="/atendimento/appointments" element={<AppointmentsPage />} />
+            <Route path="/atendimento/chat" element={<ChatPage />} />
+            <Route path="/atendimento/knowledge" element={<KnowledgePage />} />
+            <Route path="/dizimo/tithers" element={<TithersPage />} />
+            <Route path="/dizimo/tithers/new" element={<TitherFormPage />} />
+            <Route path="/dizimo/tithers/:id/edit" element={<TitherFormPage />} />
+            <Route path="/dizimo/tithe-payments" element={<TithePaymentsPage />} />
           </Route>
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/atendimento/dashboard" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

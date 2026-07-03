@@ -52,7 +52,7 @@ export function TithersPage() {
           </p>
         </div>
         <Button asChild>
-          <Link to="/tithers/new">
+          <Link to="/dizimo/tithers/new">
             <Plus size={16} />
             Novo Dizimista
           </Link>
@@ -102,7 +102,7 @@ export function TithersPage() {
                 <td className="px-4 py-3">{t.churchName}</td>
                 <td className="px-4 py-3 text-muted-foreground">{t.phone || '—'}</td>
                 <td className="px-4 py-3 text-right">
-                  <Link to={`/tithers/${t.id}/edit`} className="text-primary text-sm font-medium hover:underline">
+                  <Link to={`/dizimo/tithers/${t.id}/edit`} className="text-primary text-sm font-medium hover:underline">
                     Editar
                   </Link>
                   <button
