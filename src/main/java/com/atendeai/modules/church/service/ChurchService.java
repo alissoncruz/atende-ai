@@ -29,6 +29,7 @@ public class ChurchService {
     public ChurchResponse create(ChurchRequest req) {
         Church church = Church.builder()
                 .name(req.name())
+                .type(req.type())
                 .address(req.address())
                 .build();
         return ChurchResponse.from(repository.save(church));
@@ -38,6 +39,7 @@ public class ChurchService {
     public ChurchResponse update(UUID id, ChurchRequest req) {
         Church church = findById(id);
         church.setName(req.name());
+        church.setType(req.type());
         church.setAddress(req.address());
         return ChurchResponse.from(repository.save(church));
     }

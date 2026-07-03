@@ -75,11 +75,16 @@ export function TithersPage() {
           onChange={(e) => setChurchId(e.target.value)}
         >
           <option value="">Todas as igrejas</option>
-          {churches.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
+          <optgroup label="Matriz">
+            {churches.filter((c) => c.type === 'MATRIZ').map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </optgroup>
+          <optgroup label="Capelas">
+            {churches.filter((c) => c.type === 'CAPELA').map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </optgroup>
         </select>
       </div>
 

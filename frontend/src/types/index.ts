@@ -75,9 +75,12 @@ export interface KnowledgeDocument {
 }
 
 // Church
+export type ChurchType = 'MATRIZ' | 'CAPELA'
+
 export interface Church {
   id: string
   name: string
+  type: ChurchType
   address?: string
 }
 

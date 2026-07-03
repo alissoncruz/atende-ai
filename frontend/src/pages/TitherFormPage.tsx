@@ -6,7 +6,9 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { titherService } from '@/services/tither.service'
 import { churchService } from '@/services/church.service'
-import type { Church, TitherPayload } from '@/types'
+import type { Church, ChurchType, TitherPayload } from '@/types'
+
+const NEW_CAPELA = '__new__'
 
 const EMPTY: TitherPayload = {
   name: '',
@@ -35,10 +37,19 @@ export function TitherFormPage() {
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(isEdit)
+  const [churchType, setChurchType] = useState<ChurchType>('MATRIZ')
+  const [isAddingNewCapela, setIsAddingNewCapela] = useState(false)
+  const [newCapelaName, setNewCapelaName] = useState('')
 
   useEffect(() => {
     churchService.list().then(setChurches).catch(() => setChurches([]))
   }, [])
+
+  useEffect(() => {
+    if (!form.churchId) return
+    const match = churches.find((c) => c.id === form.churchId)
+    if (match) setChurchType(match.type)
+  }, [form.churchId, churches])
 
   useEffect(() => {
     if (!id) return
@@ -72,8 +83,19 @@ export function TitherFormPage() {
     setError('')
     setSaving(true)
     try {
+      let churchId = form.churchId
+      if (isAddingNewCapela) {
+        if (!newCapelaName.trim()) {
+          setError('Informe o nome da nova capela.')
+          setSaving(false)
+          return
+        }
+        const newChurch = await churchService.create({ name: newCapelaName.trim(), type: 'CAPELA' })
+        churchId = newChurch.id
+      }
       const payload: TitherPayload = {
         ...form,
+        churchId,
         referenceAmount: form.referenceAmount ? Number(form.referenceAmount) : undefined,
       }
       if (isEdit && id) {
@@ -156,20 +178,65 @@ export function TitherFormPage() {
 
             <section className="flex flex-col gap-4">
               <h2 className="text-sm font-semibold">Vínculo com a Igreja</h2>
-              <div className="grid grid-cols-3 gap-4">
-                <Field label="Igreja / Congregação">
-                  <select
-                    className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-                    value={form.churchId}
-                    onChange={(e) => update('churchId', e.target.value)}
-                    required
+              <div className="flex w-fit gap-1 rounded-md border border-input bg-background p-1">
+                {(['MATRIZ', 'CAPELA'] as ChurchType[]).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => {
+                      setChurchType(t)
+                      setIsAddingNewCapela(false)
+                      setNewCapelaName('')
+                      update('churchId', '')
+                    }}
+                    className={`rounded px-4 py-1.5 text-sm font-medium transition-colors ${
+                      churchType === t
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                    }`}
                   >
-                    <option value="" disabled>Selecione a igreja</option>
-                    {churches.map((c) => (
-                      <option key={c.id} value={c.id}>{c.name}</option>
-                    ))}
+                    {t === 'MATRIZ' ? 'Matriz' : 'Capela'}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <Field label={churchType === 'MATRIZ' ? 'Matriz' : 'Capela'}>
+                  <select
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    value={isAddingNewCapela ? NEW_CAPELA : form.churchId}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      if (v === NEW_CAPELA) {
+                        setIsAddingNewCapela(true)
+                        update('churchId', '')
+                      } else {
+                        setIsAddingNewCapela(false)
+                        update('churchId', v)
+                      }
+                    }}
+                    required={!isAddingNewCapela}
+                  >
+                    <option value="" disabled>
+                      {churchType === 'MATRIZ' ? 'Selecione a matriz' : 'Selecione a capela'}
+                    </option>
+                    {churches
+                      .filter((c) => c.type === churchType)
+                      .map((c) => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                    {churchType === 'CAPELA' && <option value={NEW_CAPELA}>+ Nova capela...</option>}
                   </select>
                 </Field>
+                {isAddingNewCapela && (
+                  <Field label="Nome da nova capela">
+                    <Input
+                      value={newCapelaName}
+                      onChange={(e) => setNewCapelaName(e.target.value)}
+                      placeholder="Ex: Capela Bela Vista"
+                      required
+                    />
+                  </Field>
+                )}
                 <Field label="Data de início como dizimista">
                   <Input type="date" value={form.startDate} onChange={(e) => update('startDate', e.target.value)} />
                 </Field>

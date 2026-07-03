@@ -24,6 +24,10 @@ public class Church {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ChurchType type;
+
     @Column(columnDefinition = "TEXT")
     private String address;
 
@@ -38,4 +42,8 @@ public class Church {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    public enum ChurchType {
+        MATRIZ, CAPELA
+    }
 }
