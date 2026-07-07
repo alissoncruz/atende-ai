@@ -201,7 +201,7 @@ export function TitherFormPage() {
                   </select>
                   {churchType === 'CAPELA' && (
                     <Link
-                      to="/dizimo/churches/new?type=CAPELA"
+                      to="/dizimo/churches/new?type=CAPELA&returnTo=/dizimo/tithers/new"
                       className="mt-1.5 inline-block text-xs font-medium text-primary hover:underline"
                     >
                       Não encontrou a capela? Cadastrar nova

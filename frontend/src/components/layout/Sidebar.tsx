@@ -7,6 +7,7 @@ import {
   BookOpen,
   LogOut,
   Church,
+  Landmark,
   Receipt,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -30,6 +31,7 @@ const MODULES = {
     items: [
       { to: '/dizimo/tithers', label: 'Dizimistas', icon: Church },
       { to: '/dizimo/tithe-payments', label: 'Pagamentos de Dízimo', icon: Receipt },
+      { to: '/dizimo/churches', label: 'Igrejas', icon: Landmark },
     ],
   },
 } as const

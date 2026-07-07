@@ -11,6 +11,7 @@ import { TithersPage } from '@/pages/TithersPage'
 import { TitherFormPage } from '@/pages/TitherFormPage'
 import { TithePaymentsPage } from '@/pages/TithePaymentsPage'
 import { ChurchFormPage } from '@/pages/ChurchFormPage'
+import { ChurchesPage } from '@/pages/ChurchesPage'
 
 export default function App() {
   return (
@@ -30,7 +31,9 @@ export default function App() {
             <Route path="/dizimo/tithers" element={<TithersPage />} />
             <Route path="/dizimo/tithers/new" element={<TitherFormPage />} />
             <Route path="/dizimo/tithers/:id/edit" element={<TitherFormPage />} />
+            <Route path="/dizimo/churches" element={<ChurchesPage />} />
             <Route path="/dizimo/churches/new" element={<ChurchFormPage />} />
+            <Route path="/dizimo/churches/:id/edit" element={<ChurchFormPage />} />
             <Route path="/dizimo/tithe-payments" element={<TithePaymentsPage />} />
           </Route>
 
