@@ -1,5 +1,5 @@
 import { useEffect, useState, FormEvent } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -7,8 +7,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { titherService } from '@/services/tither.service'
 import { churchService } from '@/services/church.service'
 import type { Church, ChurchType, TitherPayload } from '@/types'
-
-const NEW_CAPELA = '__new__'
 
 const EMPTY: TitherPayload = {
   name: '',
@@ -38,8 +36,6 @@ export function TitherFormPage() {
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(isEdit)
   const [churchType, setChurchType] = useState<ChurchType>('MATRIZ')
-  const [isAddingNewCapela, setIsAddingNewCapela] = useState(false)
-  const [newCapelaName, setNewCapelaName] = useState('')
 
   useEffect(() => {
     churchService.list().then(setChurches).catch(() => setChurches([]))
@@ -83,19 +79,8 @@ export function TitherFormPage() {
     setError('')
     setSaving(true)
     try {
-      let churchId = form.churchId
-      if (isAddingNewCapela) {
-        if (!newCapelaName.trim()) {
-          setError('Informe o nome da nova capela.')
-          setSaving(false)
-          return
-        }
-        const newChurch = await churchService.create({ name: newCapelaName.trim(), type: 'CAPELA' })
-        churchId = newChurch.id
-      }
       const payload: TitherPayload = {
         ...form,
-        churchId,
         referenceAmount: form.referenceAmount ? Number(form.referenceAmount) : undefined,
       }
       if (isEdit && id) {
@@ -185,8 +170,6 @@ export function TitherFormPage() {
                     type="button"
                     onClick={() => {
                       setChurchType(t)
-                      setIsAddingNewCapela(false)
-                      setNewCapelaName('')
                       update('churchId', '')
                     }}
                     className={`rounded px-4 py-1.5 text-sm font-medium transition-colors ${
@@ -203,18 +186,9 @@ export function TitherFormPage() {
                 <Field label={churchType === 'MATRIZ' ? 'Matriz' : 'Capela'}>
                   <select
                     className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                    value={isAddingNewCapela ? NEW_CAPELA : form.churchId}
-                    onChange={(e) => {
-                      const v = e.target.value
-                      if (v === NEW_CAPELA) {
-                        setIsAddingNewCapela(true)
-                        update('churchId', '')
-                      } else {
-                        setIsAddingNewCapela(false)
-                        update('churchId', v)
-                      }
-                    }}
-                    required={!isAddingNewCapela}
+                    value={form.churchId}
+                    onChange={(e) => update('churchId', e.target.value)}
+                    required
                   >
                     <option value="" disabled>
                       {churchType === 'MATRIZ' ? 'Selecione a matriz' : 'Selecione a capela'}
@@ -224,19 +198,16 @@ export function TitherFormPage() {
                       .map((c) => (
                         <option key={c.id} value={c.id}>{c.name}</option>
                       ))}
-                    {churchType === 'CAPELA' && <option value={NEW_CAPELA}>+ Nova capela...</option>}
                   </select>
+                  {churchType === 'CAPELA' && (
+                    <Link
+                      to="/dizimo/churches/new?type=CAPELA"
+                      className="mt-1.5 inline-block text-xs font-medium text-primary hover:underline"
+                    >
+                      Não encontrou a capela? Cadastrar nova
+                    </Link>
+                  )}
                 </Field>
-                {isAddingNewCapela && (
-                  <Field label="Nome da nova capela">
-                    <Input
-                      value={newCapelaName}
-                      onChange={(e) => setNewCapelaName(e.target.value)}
-                      placeholder="Ex: Capela Bela Vista"
-                      required
-                    />
-                  </Field>
-                )}
                 <Field label="Data de início como dizimista">
                   <Input type="date" value={form.startDate} onChange={(e) => update('startDate', e.target.value)} />
                 </Field>
